@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>ZONBI | Threat Intel Dashboard</title>
+        <title>ZONBI | Cross-Layer Intelligence Dashboard</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
         <style>
@@ -12,70 +12,85 @@
             .cyber-card { border: 1px solid #00ff41; box-shadow: 0 0 10px #00ff4133; background: #111; }
             input { background: #1a1a1a; border: 1px solid #00ff41; color: #00ff41; }
             .glitch { text-shadow: 2px 2px #ff0000, -2px -2px #0000ff; }
+            .loading { animation: pulse 1.5s infinite; }
+            @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
         </style>
     </head>
-    <body class="p-8">
+    <body class="p-4 md:p-8">
         <div class="max-w-5xl mx-auto">
             <header class="text-center mb-12">
-                <h1 class="text-5xl font-bold glitch mb-4">🧟 ZONBI INTELLIGENCE</h1>
-                <p class="text-gray-400">Automated Phishing & Malware Feed Dashboard</p>
-                <p class="text-xs mt-2 text-green-700 font-bold">LAST UPDATE: 2025-12-23 21:29:18 UTC</p>
+                <h1 class="text-4xl md:text-6xl font-bold glitch mb-4">🧟 ZONBI INTELLIGENCE</h1>
+                <p class="text-gray-400 uppercase tracking-widest text-sm">Triple-Layer Automated Threat Lookup</p>
+                <p class="text-xs mt-4 text-green-700 font-bold italic">LAST_SYNC: 2025-12-23 21:41:43 UTC</p>
             </header>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                 <div class="cyber-card p-6 text-center">
-                    <div class="text-sm uppercase text-gray-500">Total URLs</div>
-                    <div class="text-3xl font-bold">875743</div>
+                    <div class="text-xs text-gray-500 mb-1">URL_LAYER</div>
+                    <div class="text-3xl font-bold">875747</div>
                 </div>
                 <div class="cyber-card p-6 text-center">
-                    <div class="text-sm uppercase text-gray-500">Domains</div>
+                    <div class="text-xs text-gray-500 mb-1">DOMAIN_LAYER</div>
                     <div class="text-3xl font-bold">439756</div>
                 </div>
                 <div class="cyber-card p-6 text-center">
-                    <div class="text-sm uppercase text-gray-500">Active IPs</div>
-                    <div class="text-3xl font-bold">23174</div>
+                    <div class="text-xs text-gray-500 mb-1">IP_LAYER</div>
+                    <div class="text-3xl font-bold">23177</div>
                 </div>
             </div>
 
-            <section class="cyber-card p-8 mb-12">
-                <h2 class="text-xl mb-4 uppercase border-b border-green-900 pb-2">🔍 Instant Threat Lookup</h2>
-                <div class="flex gap-4 mb-4">
-                    <input type="text" id="searchInput" placeholder="Enter domain or IP..." class="w-full p-3 focus:outline-none">
-                    <button onclick="checkThreat()" class="bg-green-600 text-black px-8 font-bold hover:bg-green-400 transition-colors">SEARCH</button>
+            <section class="cyber-card p-6 md:p-10 mb-12">
+                <h2 class="text-xl mb-6 uppercase border-b border-green-900 pb-2">🔍 Global Indicator Search</h2>
+                <div class="flex flex-col md:flex-row gap-4 mb-4">
+                    <input type="text" id="searchInput" placeholder="Enter URL, Domain or IP Address..." class="w-full p-4 focus:outline-none">
+                    <button onclick="globalSearch()" class="bg-green-600 text-black px-10 py-4 font-bold hover:bg-white transition-all">SCAN_LAYERS</button>
                 </div>
-                <div id="statusOutput" class="text-sm italic text-gray-500">Ready to scan database...</div>
+                <div id="statusOutput" class="text-sm font-bold opacity-70 italic">Awaiting indicator input for cross-layer analysis...</div>
             </section>
 
-            <footer class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                <a href="urls.txt" class="cyber-card p-2 hover:bg-green-900 transition">DOWNLOAD URLS</a>
-                <a href="domains.txt" class="cyber-card p-2 hover:bg-green-900 transition">DOWNLOAD DOMAINS</a>
-                <a href="ips.txt" class="cyber-card p-2 hover:bg-green-900 transition">DOWNLOAD IPS</a>
-            </footer>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12 text-sm">
+                <a href="urls.txt" target="_blank" class="cyber-card p-4 text-center hover:bg-green-900 transition">RAW_URLS</a>
+                <a href="domains.txt" target="_blank" class="cyber-card p-4 text-center hover:bg-green-900 transition">RAW_DOMAINS</a>
+                <a href="ips.txt" target="_blank" class="cyber-card p-4 text-center hover:bg-green-900 transition">RAW_IPS</a>
+            </div>
         </div>
 
         <script>
-            async function checkThreat() {
-                const input = document.getElementById('searchInput').value.trim().toLowerCase();
+            async function globalSearch() {
+                const query = document.getElementById('searchInput').value.trim().toLowerCase();
                 const output = document.getElementById('statusOutput');
-                if(!input) return;
+                if(!query) return;
 
-                output.innerText = "🔍 Searching in 68MB database...";
-                output.style.color = "#888";
-
+                output.innerText = "📡 SCANNING ALL LAYERS (URL/DOMAIN/IP)...";
+                output.className = "text-sm font-bold loading";
+                
                 try {
-                    // Dev veriyi çekiyoruz (Client-side cache sayesinde hızlı çalışır)
-                    const response = await fetch('domains.txt');
-                    const text = await response.text();
-                    
-                    if(text.toLowerCase().includes(input)) {
-                        output.innerHTML = "ALERT: Indicator found in database!";
+                    // Üç dosyayı da paralel kontrol etmek için fetch başlatıyoruz
+                    const files = ['domains.txt', 'ips.txt', 'urls.txt'];
+                    let found = false;
+                    let foundIn = "";
+
+                    for(const file of files) {
+                        const res = await fetch(file);
+                        const data = await res.text();
+                        if(data.toLowerCase().includes(query)) {
+                            found = true;
+                            foundIn = file.replace('.txt', '').toUpperCase();
+                            break;
+                        }
+                    }
+
+                    output.className = "text-sm font-bold mt-2";
+                    if(found) {
+                        output.innerHTML = "🚨 ALERT: Match found in " + foundIn + " database!";
                         output.style.color = "#ff4444";
                     } else {
-                        output.innerHTML = "CLEAR: No matches found in current feed.";
+                        output.innerHTML = "✅ CLEAR: Indicator not found in any layer.";
                         output.style.color = "#00ff41";
                     }
                 } catch (e) {
-                    output.innerText = "Error: Could not access database.";
+                    output.innerText = "❌ ERROR: Connection to intelligence layers failed.";
+                    output.style.color = "#ff4444";
                 }
             }
         </script>
