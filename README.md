@@ -31,11 +31,6 @@ All data is processed and split into three specific formats to ensure compatibil
 
 ---
 
-## ⚙️ Automated Workflow
-1. **Aggregation:** Collects raw data from global threat intelligence providers.
-2. **Validation:** Sanitizes links and removes duplicates using the `validators` library.
-3. **Categorization:** Parses raw URLs into separate Domain and IP datasets.
-4. **Continuous Update:** Synchronized every 24 hours via GitHub Actions.
 
 ## 🚀 Quick Integration
 You can fetch the latest feeds directly via `curl` for your automation scripts:
