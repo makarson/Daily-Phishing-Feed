@@ -42,7 +42,10 @@ You can fetch the latest feeds directly via `curl` for your automation scripts:
 
 ```bash
 # Get the latest Domain list
-curl -O [https://raw.githubusercontent.com/makarson/Daily-Phishing-Feed/main/domains.txt](https://raw.githubusercontent.com/makarson/Daily-Phishing-Feed/main/domains.txt)
+curl -O https://raw.githubusercontent.com/makarson/Daily-Phishing-Feed/main/domains.txt
+
+# Get the latest Url list
+curl -O https://raw.githubusercontent.com/makarson/Daily-Phishing-Feed/main/urls.txt
 
 # Get the latest IP list
-curl -O [https://raw.githubusercontent.com/makarson/Daily-Phishing-Feed/main/ips.txt](https://raw.githubusercontent.com/makarson/Daily-Phishing-Feed/main/ips.txt)
+curl -O https://raw.githubusercontent.com/makarson/Daily-Phishing-Feed/main/ips.txt
