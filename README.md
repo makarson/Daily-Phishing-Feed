@@ -44,3 +44,16 @@ curl -O https://raw.githubusercontent.com/makarson/Daily-Phishing-Feed/main/urls
 
 # Get the latest IP list
 curl -O https://raw.githubusercontent.com/makarson/Daily-Phishing-Feed/main/ips.txt
+```
+
+---
+
+## 🚀 Future Roadmap & Contributing
+> **Note:** This project is currently in the **testing phase**. The list of sources and output formats will be expanded and updated regularly.
+
+If you have a specific source you would like to see tracked or if you want to help improve the detection logic, please feel free to:
+* Open an **Issue** with the source URL.
+* Submit a **Pull Request** with your improvements.
+* Help us expand our intelligence network!
+
+---
